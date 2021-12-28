@@ -77,8 +77,21 @@ async fn subscribe_returns_a_400_when_data_is_missing() {
 }
 
 static TRACING: Lazy<()> = Lazy::new(|| {
-    let subscriber = get_subscriber("test", "debug");
-    init_subscriber(subscriber);
+    let default_subscriber_name = "test";
+    let default_filter_level = "info";
+
+    if std::env::var("TEST_LOG").is_ok() {
+        let subscriber = get_subscriber(
+            default_subscriber_name,
+            default_filter_level,
+            std::io::stdout,
+        );
+        init_subscriber(subscriber);
+    } else {
+        let subscriber =
+            get_subscriber(default_subscriber_name, default_filter_level, std::io::sink);
+        init_subscriber(subscriber);
+    }
 });
 
 pub struct TestApp {
