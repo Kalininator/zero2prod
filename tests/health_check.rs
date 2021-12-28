@@ -2,6 +2,9 @@ use std::net::TcpListener;
 
 use sqlx::{Connection, Executor, PgConnection, PgPool};
 use zero2prod::configuration::{get_configuration, DatabaseSettings};
+use zero2prod::telemetry::{get_subscriber, init_subscriber};
+
+use once_cell::sync::Lazy;
 
 #[actix_rt::test]
 async fn health_check_works() {
@@ -73,12 +76,18 @@ async fn subscribe_returns_a_400_when_data_is_missing() {
     }
 }
 
+static TRACING: Lazy<()> = Lazy::new(|| {
+    let subscriber = get_subscriber("test", "debug");
+    init_subscriber(subscriber);
+});
+
 pub struct TestApp {
     pub address: String,
     pub db_pool: PgPool,
 }
 
 async fn spawn_app() -> TestApp {
+    Lazy::force(&TRACING);
     let listener = TcpListener::bind("127.0.0.1:0").expect("Failed to bind random port");
     let port = listener.local_addr().unwrap().port();
 
