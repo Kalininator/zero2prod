@@ -50,6 +50,9 @@ pub fn get_configuration() -> Result<Settings, config::ConfigError> {
     settings
         .merge(config::File::from(configuration_path.join(environment.as_str())).required(true))?;
 
+    // APP_APPLICATION_PORT -> .application.port
+    settings.merge(config::Environment::with_prefix("app").separator("__"))?;
+
     settings.try_into()
 }
 
