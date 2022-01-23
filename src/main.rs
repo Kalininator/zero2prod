@@ -24,10 +24,12 @@ async fn main() -> std::io::Result<()> {
         .email_client
         .sender()
         .expect("Sender email invalid");
+    let timeout = configuration.email_client.timeout();
     let email_client = EmailClient::new(
         configuration.email_client.base_url,
         sender_address,
         configuration.email_client.authorization_token,
+        timeout,
     );
 
     run(listener, connection_pool, email_client)?.await
