@@ -1,7 +1,7 @@
 {
   "db": "PostgreSQL",
-  "446ad9a68a5f239fce81cad43acf3e4850b15a2f3cb1efed09c3b38edb31a033": {
-    "query": "\n        insert into subscriptions (id, email, name, subscribed_at)\n        values ($1, $2, $3, $4)\n        ",
+  "8f6999fed7b094905d22b991972943b6a138761c270a29c0e9e9b360beee756e": {
+    "query": "\n        insert into subscriptions (id, email, name, subscribed_at, status)\n        values ($1, $2, $3, $4, 'confirmed')\n        ",
     "describe": {
       "columns": [],
       "parameters": {
